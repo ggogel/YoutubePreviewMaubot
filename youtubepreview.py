@@ -18,7 +18,6 @@ youtube_pattern = re.compile(r"^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.co
 class YoutubePreviewPlugin(Plugin):
     async def start(self) -> None:
         await super().start()
-        self.config.load_and_update()
 
     @classmethod
     def get_config_class(cls) -> Type[BaseProxyConfig]:
