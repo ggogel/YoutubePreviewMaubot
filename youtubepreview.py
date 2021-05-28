@@ -23,23 +23,25 @@ class YoutubePreviewPlugin(Plugin):
     def get_config_class(cls) -> Type[BaseProxyConfig]:
         return Config
 
-    @command.new("wolfram")
-    @command.argument("search_term", pass_raw=True, required=True)
-    async def handler(self, evt: MessageEvent, search_term: str) -> None:
-        await evt.mark_read()
-
-        appid = self.config["appid"]
-        url_params = urllib.parse.urlencode({"i": search_term, "appid": appid})
-        gif_link =  "https://api.wolframalpha.com/v1/simple?{}".format(url_params)
-        resp = await self.http.get(gif_link)
-        if resp.status != 200:
-            self.log.warning(f"Unexpected status fetching image {gif_link}: {resp.status}")
-            return None
-        gif = await resp.read()
-
-        filename = f"{search_term}.gif" if len(search_term) > 0 else "simple.gif"
-        uri = await self.client.upload_media(gif, mime_type='image/gif', filename=filename)
-
-        await self.client.send_image(evt.room_id, url=uri, file_name=filename, info=ImageInfo(
-                        mimetype='image/gif'
-                    ))
+    @event.on(EventType.ROOM_MESSAGE)
+    async def on_message(self, evt: MessageEvent) -> None:
+        if evt.content.msgtype != MessageType.TEXT or evt.content.body.startswith("!"):
+            return
+        for url_tup in youtube_pattern.findall(evt.content.body):
+            await evt.mark_read()
+            url = ''.join(url_tup)
+            if "youtu.be" in url:
+                video_id = url.split("youtu.be/")[1]
+            else:
+                video_id = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)['v'][0]
+            thumbnail_link = "https://img.youtube.com/vi/" + video_id + "/hqdefault.jpg"
+            resp = await self.http.get(thumbnail_link)
+            if resp.status != 200:
+                self.log.warning(f"Unexpected status fetching image {thumbnail_link}: {resp.status}")
+                return None
+            thumbnail = await resp.read()
+            filename = video_id + ".jpg"
+            uri = await self.client.upload_media(thumbnail, mime_type='image/jpg', filename=filename)
+            await self.client.send_image(evt.room_id, url=uri, file_name=filename, info=ImageInfo(
+                    mimetype='image/jpg'
+                ))
