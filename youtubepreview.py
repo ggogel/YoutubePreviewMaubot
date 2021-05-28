@@ -14,6 +14,8 @@ class Config(BaseProxyConfig):
 
 
 youtube_pattern = re.compile(r"^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$")
+
+class YoutubePreviewPlugin(Plugin):
     async def start(self) -> None:
         await super().start()
         self.config.load_and_update()
