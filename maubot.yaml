@@ -6,7 +6,7 @@
 maubot: 0.1.0
 
 # The unique ID for the plugin. Java package naming style. (i.e. use your own domain, not xyz.maubot)
-id: me.gogel.maubot.wolframalpha
+id: me.gogel.maubot.youtubepreview
 
 # A PEP 440 compliant version string.
 version: 0.0.1
@@ -20,20 +20,20 @@ license: MIT
 # Submodules that are imported by modules listed here don't need to be listed separately.
 # However, top-level modules must always be listed even if they're imported by other modules.
 modules:
-- wolframalpha
+- youtubepreview
 #- config
 # The main class of the plugin. Format: module/Class
 # If `module` is omitted, will default to last module specified in the module list.
 # Even if `module` is not omitted here, it must be included in the modules list.
 # The main class must extend maubot.Plugin
-main_class: WolframAlphaPlugin
+main_class: YoutubePreviewPlugin
 
 # Whether or not instances need a database
 database: false
 
 #  Extra files that the upcoming build tool should include in the mbp file.
-extra_files:
- - base-config.yaml
+#extra_files:
+# - base-config.yaml
 #- LICENSE
 
 # List of dependencies
