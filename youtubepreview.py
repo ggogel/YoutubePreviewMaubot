@@ -1,9 +1,10 @@
+from ast import parse
 from typing import Type
-import urllib.parse
-from mautrix.types import RoomID, ImageInfo
+import urllib.parse, re
+from mautrix.types import ImageInfo, EventType, MessageType
 from mautrix.util.config import BaseProxyConfig, ConfigUpdateHelper
 from maubot import Plugin, MessageEvent
-from maubot.handlers import command
+from maubot.handlers import event
 
 class Config(BaseProxyConfig):
     def do_update(self, helper: ConfigUpdateHelper) -> None:
