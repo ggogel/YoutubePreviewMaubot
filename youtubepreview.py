@@ -41,7 +41,6 @@ class YoutubePreviewPlugin(Plugin):
             query_string = urllib.parse.urlencode(params)
             query_url = query_url + "?" + query_string
             response = urllib.request.urlopen(query_url)
-            self.log.warning(response)
             if response.status != 200:
                 self.log.warning(f"Unexpected status fetching video title {query_url}: {response.status}")
                 return None
