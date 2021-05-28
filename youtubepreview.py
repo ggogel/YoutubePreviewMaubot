@@ -13,7 +13,7 @@ class Config(BaseProxyConfig):
         helper.copy("response_type")
 
 
-class WolframAlphaPlugin(Plugin):
+youtube_pattern = re.compile(r"^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$")
     async def start(self) -> None:
         await super().start()
         self.config.load_and_update()
