@@ -1,6 +1,6 @@
 from ast import parse
 from typing import Type
-import urllib.parse, re
+import urllib.parse, re, json
 from mautrix.types import ImageInfo, EventType, MessageType
 from mautrix.util.config import BaseProxyConfig, ConfigUpdateHelper
 from maubot import Plugin, MessageEvent
@@ -29,11 +29,27 @@ class YoutubePreviewPlugin(Plugin):
             return
         for url_tup in youtube_pattern.findall(evt.content.body):
             await evt.mark_read()
+
             url = ''.join(url_tup)
             if "youtu.be" in url:
                 video_id = url.split("youtu.be/")[1]
             else:
                 video_id = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)['v'][0]
+            
+            params = {"format": "json", "url": url}
+            query_url = "https://www.youtube.com/oembed"
+            query_string = urllib.parse.urlencode(params)
+            query_url = query_url + "?" + query_string
+            response = urllib.request.urlopen(query_url)
+            self.log.warning(response)
+            if response.status != 200:
+                self.log.warning(f"Unexpected status fetching video title {query_url}: {response.status}")
+                return None
+            response_text = response.read()
+            data = json.loads(response_text.decode())
+            msg = data['title'] + ": " + url
+            await evt.respond(msg)
+
             thumbnail_link = "https://img.youtube.com/vi/" + video_id + "/hqdefault.jpg"
             response = await self.http.get(thumbnail_link)
             if response.status != 200:
