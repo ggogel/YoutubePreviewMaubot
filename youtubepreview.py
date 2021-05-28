@@ -35,11 +35,11 @@ class YoutubePreviewPlugin(Plugin):
             else:
                 video_id = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)['v'][0]
             thumbnail_link = "https://img.youtube.com/vi/" + video_id + "/hqdefault.jpg"
-            resp = await self.http.get(thumbnail_link)
-            if resp.status != 200:
-                self.log.warning(f"Unexpected status fetching image {thumbnail_link}: {resp.status}")
+            response = await self.http.get(thumbnail_link)
+            if response.status != 200:
+                self.log.warning(f"Unexpected status fetching image {thumbnail_link}: {response.status}")
                 return None
-            thumbnail = await resp.read()
+            thumbnail = await response.read()
             filename = video_id + ".jpg"
             uri = await self.client.upload_media(thumbnail, mime_type='image/jpg', filename=filename)
             await self.client.send_image(evt.room_id, url=uri, file_name=filename, info=ImageInfo(
