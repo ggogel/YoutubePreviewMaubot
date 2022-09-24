@@ -35,7 +35,8 @@ class YoutubePreviewPlugin(Plugin):
                 video_id = url.split("youtu.be/")[1]
             else:
                 video_id = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)['v'][0]
-            
+            video_id = video_id.split("?", 1)[0]
+
             params = {"format": "json", "url": url}
             query_url = "https://www.youtube.com/oembed"
             query_string = urllib.parse.urlencode(params)
