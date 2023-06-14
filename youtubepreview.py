@@ -13,7 +13,7 @@ class Config(BaseProxyConfig):
         helper.copy("response_type")
 
 
-youtube_pattern = re.compile(r"^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$")
+youtube_pattern = re.compile(r".*((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?.*")
 
 class YoutubePreviewPlugin(Plugin):
     async def start(self) -> None:
