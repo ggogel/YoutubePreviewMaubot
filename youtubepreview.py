@@ -37,7 +37,7 @@ class YoutubePreviewPlugin(Plugin):
                 if "music." in subdomain:
                     music_prefix = "music."
                 else:
-                     music_prefix = ""
+                    music_prefix = ""
             
             if "youtu.be" in url:
                 video_id = url.split("youtu.be/")[1]
