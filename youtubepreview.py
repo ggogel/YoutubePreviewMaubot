@@ -14,6 +14,7 @@ class Config(BaseProxyConfig):
 
 
 youtube_pattern = re.compile(r".*((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?.*")
+music_pattern = re.compile(r".*((?:https?:)?\/\/)?((?:music|www|m)\.)((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?.*")
 
 class YoutubePreviewPlugin(Plugin):
     async def start(self) -> None:
@@ -31,6 +32,13 @@ class YoutubePreviewPlugin(Plugin):
             await evt.mark_read()
 
             url = ''.join(url_tup)
+
+            for subdomain in music_pattern.findall(evt.content.body):
+                if "music." in subdomain:
+                    music_prefix = "music."
+                else:
+                    music_prefix = ""
+            
             if "youtu.be" in url:
                 video_id = url.split("youtu.be/")[1]
             else:
@@ -47,7 +55,7 @@ class YoutubePreviewPlugin(Plugin):
                 return None
             response_text = response.read()
             data = json.loads(response_text.decode())
-            msg = data['title'] + ": " + url
+            msg = data['title'] + ": " + music_prefix + url
             await evt.respond(msg)
 
             thumbnail_link = "https://img.youtube.com/vi/" + video_id + "/hqdefault.jpg"
