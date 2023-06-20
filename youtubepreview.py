@@ -36,14 +36,17 @@ class YoutubePreviewPlugin(Plugin):
             for subdomain in music_pattern.findall(evt.content.body):
                 if "music." in subdomain:
                     music_prefix = "music."
-                else:
-                    music_prefix = ""
+            
+            try:
+                music_prefix
+            except:
+                music_prefix = ""
             
             if "youtu.be" in url:
                 video_id = url.split("youtu.be/")[1]
             else:
                 video_id = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)['v'][0]
-            video_id = video_id.split("?", 1)[0]
+                video_id = video_id.split("?", 1)[0]
 
             params = {"format": "json", "url": url}
             query_url = "https://www.youtube.com/oembed"
